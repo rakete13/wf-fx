@@ -2,7 +2,7 @@
 
 /* Ebenen, die die Library in das Element legt (Grain, Vignette, Duotone) */
 [data-fx] { --fx-on: 1; }
-.wfx-host { position: relative; isolation: isolate; }
+.wfx-host { isolation: isolate; } /* position: nur per Script, wenn das Element statisch ist (absolute/fixed/sticky bleiben) */
 .wfx-l { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; z-index: 1; }
 
 /* ---------- Grain ---------- */
