@@ -9,7 +9,7 @@ Bildeffekte per Attribut für Webflow: **Grain**, **Duotone**, **Mesh-Gradient**
 Eine Zeile in den **Head Code** der Site (Site Settings → Custom Code → Head Code), damit beim Laden nichts flackert:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-fx@1.0.0/src/wf-fx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-fx@1.0.1/src/wf-fx.min.js"></script>
 ```
 
 Alternativ ohne CDN: den Inhalt von [`webflow/head-code.html`](webflow/head-code.html) in den Head Code kopieren (~9.300 Zeichen).
@@ -103,4 +103,4 @@ img-wrapper   data-fx="fade-edge"  data-fx-fade-side="bottom"  data-fx-fade-leng
 
 ## Versionen
 
-- **1.0.0** – Grain, Duotone, Mesh-Gradient, Vignette, weicher Rand.
+- **1.0.1** – Grain, Duotone, Mesh-Gradient, Vignette, weicher Rand (erstes Release; 1.0.0 wurde übersprungen).

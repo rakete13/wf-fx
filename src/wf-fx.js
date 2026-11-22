@@ -1,8 +1,8 @@
-/*! WF FX v1.0.0 · Bildeffekte per Attribut für Webflow · github.com/rakete13/wf-fx */
+/*! WF FX v1.0.1 · Bildeffekte per Attribut für Webflow · github.com/rakete13/wf-fx */
 (() => {
   'use strict';
   if (window.WFFx) return;
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.1';
   /*@css*/
 
   const EFFECTS = ['grain', 'duotone', 'mesh', 'vignette', 'fade-edge'];
