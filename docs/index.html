@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WF FX · Bildeffekte für Webflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script src="wf-fx.min.js"></script>
+<style>
+:root { --ink: #141824; --muted: #5d6476; --line: #dde0e8; --bg: #f3f4f7; --surface: #fff; --accent: #2f4cf5; --code-bg: #0f1320; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'IBM Plex Sans', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.55; }
+code, pre { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .85em; }
+p code, li code, td code { background: #e7e9f0; padding: 1px 5px; border-radius: 4px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 56px 24px 96px; }
+header.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.05; margin: 0 0 12px; letter-spacing: -.02em; }
+header.hero p { max-width: 640px; color: var(--muted); margin: 0 0 8px; }
+.eyebrow { font: 500 .8rem 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; }
+nav.toc a { font-size: .85rem; color: var(--ink); text-decoration: none; border: 1px solid var(--line); background: var(--surface); padding: 5px 12px; border-radius: 999px; }
+section { margin-top: 72px; }
+.head { display: grid; grid-template-columns: 56px 1fr; gap: 4px 16px; align-items: baseline; margin-bottom: 18px; }
+.head .num { font: 500 .85rem 'IBM Plex Mono', monospace; color: var(--accent); }
+.head h2 { margin: 0; font-size: 1.6rem; letter-spacing: -.01em; }
+.head p { grid-column: 2; margin: 4px 0 0; color: var(--muted); max-width: 720px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 10px; }
+.chips .label { font: 500 .72rem 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-right: 6px; min-width: 92px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: .82rem; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid.two { grid-template-columns: repeat(2, 1fr); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.card .cap { padding: 10px 14px; font-size: .82rem; color: var(--muted); }
+.img-wrapper { aspect-ratio: 4 / 5; overflow: hidden; }
+.img-wrapper.ls { aspect-ratio: 3 / 2; }
+.img-wrapper img, img.cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+img.cover { aspect-ratio: 4 / 5; }
+.mesh-box { min-height: 360px; border-radius: 14px; display: grid; place-items: end start; padding: 28px; color: #fff; }
+.mesh-box h3 { margin: 0; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.05; max-width: 520px; text-shadow: 0 1px 20px rgba(0,0,0,.15); }
+pre { background: var(--code-bg); color: #dfe4f2; border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 14px 0 0; white-space: pre; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: #fafbfc; }
+.note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin: 16px 0 0; font-size: .92rem; }
+@media (max-width: 760px) { .grid, .grid.two { grid-template-columns: 1fr 1fr; } .head { grid-template-columns: 1fr; } .head p { grid-column: 1; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Rakete 13 · Webflow-Library</div>
+    <h1>WF FX</h1>
+    <p>Bildeffekte per Attribut: Filmkorn, Duotone, Mesh-Gradient, Vignette und weicher Rand. Größtenteils CSS, ohne GSAP, kombinierbar und für CMS-Bilder gemacht. Begleiter zu <a href="https://github.com/rakete13/wf-anim">WF Anim</a>, <a href="https://github.com/rakete13/wf-slider">WF Slider</a> und <a href="https://github.com/rakete13/wf-page-transition">WF Page Transition</a>.</p>
+    <nav class="toc">
+      <a href="#einbau">Einbau</a><a href="#grain">Grain</a><a href="#duotone">Duotone</a><a href="#mesh">Mesh-Gradient</a><a href="#vignette">Vignette</a><a href="#fade">Weicher Rand</a><a href="#kombi">Kombiniert</a><a href="#referenz">Referenz</a>
+    </nav>
+  </header>
+
+  <section id="einbau">
+    <div class="head"><div class="num">00</div><h2>Einbau</h2><p>Eine Zeile in den <strong>Head Code</strong> der Site (Site Settings → Custom Code → Head Code), damit beim Laden nichts flackert. Dann <code>data-fx</code> an das Element hängen, bei Bildern an den <strong>img-wrapper</strong>, nicht ans Bild.</p></div>
+    <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-fx@1.0.0/src/wf-fx.min.js"&gt;&lt;/script&gt;</pre>
+    <p class="note">Mehrere Effekte mit Leerzeichen: <code>data-fx="duotone grain"</code>. Bei „Bewegung reduzieren“ stehen animiertes Grain und animierter Mesh still. Hinweise zur Einrichtung: <code>?wfx-debug</code> an die URL hängen und die Konsole öffnen.</p>
+  </section>
+
+  <section id="grain">
+    <div class="head"><div class="num">01</div><h2>Grain</h2><p>Feines Filmkorn über Bild, Fläche oder Verlauf. Die Textur wird erzeugt, es braucht keine Bilddatei.</p></div>
+    <div class="chips" data-chips="grain-strength"><span class="label">Stärke</span>
+      <button class="chip" data-v="0.08" aria-pressed="false">0.08</button><button class="chip" data-v="" aria-pressed="true">0.14</button><button class="chip" data-v="0.25" aria-pressed="false">0.25</button><button class="chip" data-v="0.4" aria-pressed="false">0.4</button></div>
+    <div class="chips" data-chips="grain-size"><span class="label">Körnung</span>
+      <button class="chip" data-v="110" aria-pressed="false">fein</button><button class="chip" data-v="" aria-pressed="true">normal</button><button class="chip" data-v="320" aria-pressed="false">grob</button></div>
+    <div class="chips" data-chips="grain-blend"><span class="label">Mischmodus</span>
+      <button class="chip" data-v="" aria-pressed="true">overlay</button><button class="chip" data-v="soft-light" aria-pressed="false">soft-light</button><button class="chip" data-v="multiply" aria-pressed="false">multiply</button><button class="chip" data-v="screen" aria-pressed="false">screen</button></div>
+    <div class="chips" data-chips="grain-animate"><span class="label">Bewegung</span>
+      <button class="chip" data-v="" aria-pressed="true">still</button><button class="chip" data-v="on" aria-pressed="false">flimmert</button></div>
+    <div class="grid" data-target="grain">
+      <div class="card"><div class="img-wrapper" data-fx="grain"><img src="https://picsum.photos/id/1027/800/1000" alt=""></div><div class="cap">Foto</div></div>
+      <div class="card"><div class="img-wrapper" data-fx="grain" style="background:linear-gradient(160deg,#ff5a1f,#1d3cff)"></div><div class="cap">Verlauf</div></div>
+      <div class="card"><div class="img-wrapper" data-fx="grain" style="background:#e9e6df"></div><div class="cap">Fläche</div></div>
+    </div>
+    <pre data-code="grain"></pre>
+  </section>
+
+  <section id="duotone">
+    <div class="head"><div class="num">02</div><h2>Duotone</h2><p>Bilder in zwei Farben, zum Beispiel den Markenfarben. Ideal für CMS-Bilder, die einheitlich wirken sollen. Farben auch als Webflow-Variable: <code>var(--brand)</code>.</p></div>
+    <div class="chips" data-chips="duo"><span class="label">Farben</span>
+      <button class="chip" data-v="#1d3cff|#f2e8d5" aria-pressed="true">Blau / Creme</button><button class="chip" data-v="#3b0d0d|#ff8a5c" aria-pressed="false">Bordeaux / Koralle</button><button class="chip" data-v="#0f2a1d|#c8f560" aria-pressed="false">Tanne / Limette</button><button class="chip" data-v="#111111|#ffffff" aria-pressed="false">Schwarz / Weiß</button></div>
+    <div class="chips" data-chips="duo-hover"><span class="label">Hover</span>
+      <button class="chip" data-v="" aria-pressed="true">bleibt</button><button class="chip" data-v="on" aria-pressed="false">wird farbig</button></div>
+    <div class="grid" data-target="duotone">
+      <div class="card"><div class="img-wrapper" data-fx="duotone"><img src="https://picsum.photos/id/1011/800/1000" alt=""></div><div class="cap">am Wrapper (empfohlen)</div></div>
+      <div class="card"><div class="img-wrapper" data-fx="duotone"><img src="https://picsum.photos/id/1005/800/1000" alt=""></div><div class="cap">am Wrapper</div></div>
+      <div class="card"><img class="cover" data-fx="duotone" src="https://picsum.photos/id/1012/800/1000" alt=""><div class="cap">direkt am Bild (SVG-Filter, ohne Hover)</div></div>
+    </div>
+    <pre data-code="duotone"></pre>
+  </section>
+
+  <section id="mesh">
+    <div class="head"><div class="num">03</div><h2>Mesh-Gradient</h2><p>Weiche Farbwolken als Hintergrund einer Section oder Box. Bis zu 5 Farben, auf Wunsch langsam wandernd.</p></div>
+    <div class="chips" data-chips="mesh"><span class="label">Farben</span>
+      <button class="chip" data-v="#ff5a1f, #1d3cff, #ffc93d|#f4d7c8" aria-pressed="true">Sonne</button><button class="chip" data-v="#7b2ff7, #00d4ff, #ff4ecd, #1d1b4b|#120e2e" aria-pressed="false">Nacht</button><button class="chip" data-v="#9dff00, #00b88a, #e6ffa8|#0f2a1d" aria-pressed="false">Wald</button><button class="chip" data-v="#ffffff, #dfe7ff, #ffe3ef|#f4f2ee" aria-pressed="false">Pastell</button></div>
+    <div class="chips" data-chips="mesh-size"><span class="label">Weichheit</span>
+      <button class="chip" data-v="40" aria-pressed="false">kompakt</button><button class="chip" data-v="" aria-pressed="true">normal</button><button class="chip" data-v="75" aria-pressed="false">weich</button></div>
+    <div class="chips" data-chips="mesh-animate"><span class="label">Bewegung</span>
+      <button class="chip" data-v="on" aria-pressed="true">wandert</button><button class="chip" data-v="" aria-pressed="false">still</button></div>
+    <div class="mesh-box" id="mesh-demo" data-fx="mesh grain" data-fx-mesh-colors="#ff5a1f, #1d3cff, #ffc93d" data-fx-mesh-base="#f4d7c8" data-fx-mesh-animate data-fx-grain-strength="0.12"><h3>Ein Hintergrund, der lebt.</h3></div>
+    <pre data-code="mesh"></pre>
+  </section>
+
+  <section id="vignette">
+    <div class="head"><div class="num">04</div><h2>Vignette</h2><p>Abgedunkelte Ränder lenken den Blick in die Mitte und machen Text auf Bildern lesbarer.</p></div>
+    <div class="chips" data-chips="vig"><span class="label">Stärke</span>
+      <button class="chip" data-v="0.3" aria-pressed="false">leicht</button><button class="chip" data-v="" aria-pressed="true">normal</button><button class="chip" data-v="0.85" aria-pressed="false">stark</button></div>
+    <div class="chips" data-chips="vig-color"><span class="label">Farbe</span>
+      <button class="chip" data-v="" aria-pressed="true">Schwarz</button><button class="chip" data-v="#1d3cff" aria-pressed="false">Blau</button><button class="chip" data-v="#ffffff" aria-pressed="false">Weiß</button></div>
+    <div class="grid two" data-target="vignette">
+      <div class="card"><div class="img-wrapper ls" data-fx="vignette"><img src="https://picsum.photos/id/1018/1200/800" alt=""></div><div class="cap">ellipse (Standard)</div></div>
+      <div class="card"><div class="img-wrapper ls" data-fx="vignette" data-fx-vignette-shape="circle"><img src="https://picsum.photos/id/1036/1200/800" alt=""></div><div class="cap">circle</div></div>
+    </div>
+    <pre data-code="vignette"></pre>
+  </section>
+
+  <section id="fade">
+    <div class="head"><div class="num">05</div><h2>Weicher Rand</h2><p>Das Element läuft über eine Maske weich aus, zum Beispiel ein Hero-Bild in den Seitenhintergrund.</p></div>
+    <div class="chips" data-chips="fade-side"><span class="label">Seite</span>
+      <button class="chip" data-v="" aria-pressed="true">bottom</button><button class="chip" data-v="top" aria-pressed="false">top</button><button class="chip" data-v="x" aria-pressed="false">x</button><button class="chip" data-v="y" aria-pressed="false">y</button><button class="chip" data-v="all" aria-pressed="false">all</button></div>
+    <div class="chips" data-chips="fade-length"><span class="label">Länge</span>
+      <button class="chip" data-v="12" aria-pressed="false">kurz</button><button class="chip" data-v="" aria-pressed="true">25 %</button><button class="chip" data-v="45" aria-pressed="false">lang</button></div>
+    <div class="grid two" data-target="fade">
+      <div class="img-wrapper ls" data-fx="fade-edge"><img src="https://picsum.photos/id/1043/1200/800" alt=""></div>
+      <div class="img-wrapper ls" data-fx="fade-edge"><img src="https://picsum.photos/id/1039/1200/800" alt=""></div>
+    </div>
+    <pre data-code="fade"></pre>
+  </section>
+
+  <section id="kombi">
+    <div class="head"><div class="num">06</div><h2>Kombiniert</h2><p>Effekte lassen sich frei mischen, auch mit WF Slider und WF Anim (z. B. Parallax am Bild im Wrapper).</p></div>
+    <div class="grid">
+      <div class="card"><div class="img-wrapper" data-fx="duotone grain" data-fx-duotone-dark="#3b0d0d" data-fx-duotone-light="#ff8a5c" data-fx-grain-strength="0.2" data-fx-duotone-hover><img src="https://picsum.photos/id/1025/800/1000" alt=""></div><div class="cap"><code>duotone grain</code> + Hover</div></div>
+      <div class="card"><div class="img-wrapper" data-fx="vignette grain fade-edge" data-fx-grain-animate><img src="https://picsum.photos/id/1040/800/1000" alt=""></div><div class="cap"><code>vignette grain fade-edge</code></div></div>
+      <div class="card"><div class="img-wrapper" data-fx="mesh grain" data-fx-mesh-colors="#7b2ff7, #00d4ff, #ff4ecd" data-fx-mesh-base="#120e2e" data-fx-mesh-animate data-fx-grain-strength="0.18"></div><div class="cap"><code>mesh grain</code></div></div>
+    </div>
+  </section>
+
+  <section id="referenz">
+    <div class="head"><div class="num">07</div><h2>Referenz</h2><p>Alle Attribute. Zahlen wie Stärke gehen als <code>0.2</code> oder <code>20</code> (Prozent).</p></div>
+    <table>
+      <tr><th>Attribut</th><th>Standard</th><th>Wirkung</th></tr>
+      <tr><td><code>data-fx</code></td><td>–</td><td><code>grain</code>, <code>duotone</code>, <code>mesh</code>, <code>vignette</code>, <code>fade-edge</code>, mehrere mit Leerzeichen</td></tr>
+      <tr><td><code>data-fx-grain-strength</code></td><td><code>0.14</code></td><td>Deckkraft des Korns</td></tr>
+      <tr><td><code>data-fx-grain-size</code></td><td><code>180</code></td><td>Kachelgröße in px: kleiner = feiner</td></tr>
+      <tr><td><code>data-fx-grain-blend</code></td><td><code>overlay</code></td><td>Mischmodus: <code>soft-light</code>, <code>multiply</code>, <code>screen</code>, <code>normal</code></td></tr>
+      <tr><td><code>data-fx-grain-animate</code></td><td>aus</td><td>Korn flimmert wie Film</td></tr>
+      <tr><td><code>data-fx-duotone-dark</code> · <code>-light</code></td><td><code>#1d3cff</code> · <code>#f2e8d5</code></td><td>Farbe der Schatten und der Lichter, auch <code>var(--brand)</code></td></tr>
+      <tr><td><code>data-fx-duotone-contrast</code></td><td><code>1.1</code></td><td>Kontrast vor dem Einfärben</td></tr>
+      <tr><td><code>data-fx-duotone-hover</code></td><td>aus</td><td>Beim Hover (auf das Element oder einen Link darum) in Farbe. Dauer: <code>data-fx-duotone-speed</code> (<code>0.6</code> s)</td></tr>
+      <tr><td><code>data-fx-mesh-colors</code></td><td>Orange, Blau</td><td>2 bis 5 Farben, mit Komma getrennt</td></tr>
+      <tr><td><code>data-fx-mesh-base</code></td><td><code>#e9e6df</code></td><td>Grundfarbe darunter</td></tr>
+      <tr><td><code>data-fx-mesh-size</code></td><td><code>55</code></td><td>Weichheit der Farbwolken in %</td></tr>
+      <tr><td><code>data-fx-mesh-animate</code> · <code>-speed</code></td><td>aus · <code>18</code></td><td>Farben wandern langsam, Dauer eines Durchgangs in s</td></tr>
+      <tr><td><code>data-fx-vignette-strength</code></td><td><code>0.55</code></td><td>Stärke</td></tr>
+      <tr><td><code>data-fx-vignette-color</code></td><td><code>#000</code></td><td>Farbe der Ränder</td></tr>
+      <tr><td><code>data-fx-vignette-size</code></td><td><code>45</code></td><td>Wie weit die Mitte frei bleibt, in %</td></tr>
+      <tr><td><code>data-fx-vignette-shape</code></td><td><code>ellipse</code></td><td>oder <code>circle</code></td></tr>
+      <tr><td><code>data-fx-fade-side</code></td><td><code>bottom</code></td><td><code>top</code>, <code>left</code>, <code>right</code>, <code>x</code>, <code>y</code>, <code>all</code></td></tr>
+      <tr><td><code>data-fx-fade-length</code></td><td><code>25</code></td><td>Länge des Auslaufs in %</td></tr>
+    </table>
+    <p class="note">JavaScript: <code>WFFx.init(scope)</code> für nachgeladene Inhalte, <code>WFFx.issues</code> für Hinweise, <code>WFFx.version</code>.</p>
+  </section>
+</div>
+
+<script>
+// Nur für die Demo: Einstellungen umschalten und den passenden Code zeigen
+(() => {
+  const all = (sel) => [...document.querySelectorAll(sel)];
+  const setAttr = (els, name, v) => els.forEach((el) => (v === null || v === '' ? el.removeAttribute(name) : el.setAttribute(name, v)));
+  const targets = {
+    grain: () => all('[data-target="grain"] [data-fx]'),
+    duotone: () => all('[data-target="duotone"] [data-fx]'),
+    mesh: () => [document.getElementById('mesh-demo')],
+    vignette: () => all('[data-target="vignette"] [data-fx]'),
+    fade: () => all('[data-target="fade"] [data-fx]'),
+  };
+  const attrs = (el) => [...el.attributes].filter((a) => a.name.startsWith('data-fx')).map((a) => (a.value === '' ? a.name : `${a.name}="${a.value}"`)).join('  ');
+  const code = () => {
+    const c = (k, label) => {
+      const pre = document.querySelector(`[data-code="${k}"]`);
+      if (pre) pre.textContent = `${label}   ${attrs(targets[k]()[0])}`;
+    };
+    c('grain', 'img-wrapper');
+    c('duotone', 'img-wrapper');
+    c('mesh', 'section/box');
+    c('vignette', 'img-wrapper');
+    c('fade', 'img-wrapper');
+  };
+  const act = {
+    'grain-strength': (v) => setAttr(targets.grain(), 'data-fx-grain-strength', v),
+    'grain-size': (v) => setAttr(targets.grain(), 'data-fx-grain-size', v),
+    'grain-blend': (v) => setAttr(targets.grain(), 'data-fx-grain-blend', v),
+    'grain-animate': (v) => setAttr(targets.grain(), 'data-fx-grain-animate', v ? 'true' : null),
+    duo: (v) => {
+      const [d, l] = v.split('|');
+      setAttr(targets.duotone(), 'data-fx-duotone-dark', d);
+      setAttr(targets.duotone(), 'data-fx-duotone-light', l);
+    },
+    'duo-hover': (v) => setAttr(targets.duotone(), 'data-fx-duotone-hover', v ? 'true' : null),
+    mesh: (v) => {
+      const [c, b] = v.split('|');
+      setAttr(targets.mesh(), 'data-fx-mesh-colors', c);
+      setAttr(targets.mesh(), 'data-fx-mesh-base', b);
+    },
+    'mesh-size': (v) => setAttr(targets.mesh(), 'data-fx-mesh-size', v),
+    'mesh-animate': (v) => setAttr(targets.mesh(), 'data-fx-mesh-animate', v ? 'true' : null),
+    vig: (v) => setAttr(targets.vignette(), 'data-fx-vignette-strength', v),
+    'vig-color': (v) => setAttr(targets.vignette(), 'data-fx-vignette-color', v),
+    'fade-side': (v) => setAttr(targets.fade(), 'data-fx-fade-side', v),
+    'fade-length': (v) => setAttr(targets.fade(), 'data-fx-fade-length', v),
+  };
+  all('[data-chips]').forEach((row) => {
+    row.addEventListener('click', (e) => {
+      const b = e.target.closest('.chip');
+      if (!b) return;
+      row.querySelectorAll('.chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      act[row.dataset.chips](b.dataset.v);
+      WFFx.init();
+      code();
+    });
+  });
+  act.duo('#1d3cff|#f2e8d5');
+  WFFx.init();
+  code();
+})();
+</script>
+</body>
+</html>

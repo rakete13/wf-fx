@@ -1,0 +1,81 @@
+/* WF FX – Bildeffekte per Attribut: grain, duotone, mesh, vignette, fade-edge */
+
+/* Ebenen, die die Library in das Element legt (Grain, Vignette, Duotone) */
+[data-fx] { --fx-on: 1; }
+.wfx-host { position: relative; isolation: isolate; }
+.wfx-l { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; z-index: 1; }
+
+/* ---------- Grain ---------- */
+.wfx-grain {
+  background-image: var(--wfx-noise);
+  background-size: var(--fx-grain-size, 180px) var(--fx-grain-size, 180px);
+  opacity: var(--fx-grain-strength, 0.14);
+  mix-blend-mode: var(--fx-grain-blend, overlay);
+  z-index: 3;
+}
+[data-fx-grain-animate] > .wfx-grain { animation: wfx-grain 0.9s steps(1) infinite; }
+@keyframes wfx-grain {
+  0% { background-position: 0 0; }
+  12% { background-position: -37px -61px; }
+  25% { background-position: -83px 29px; }
+  37% { background-position: 47px -89px; }
+  50% { background-position: -31px 73px; }
+  62% { background-position: -91px -17px; }
+  75% { background-position: 71px 47px; }
+  87% { background-position: 23px -33px; }
+}
+
+/* ---------- Vignette ---------- */
+.wfx-vignette {
+  background: radial-gradient(var(--fx-vignette-shape, ellipse) at center, transparent var(--fx-vignette-size, 45%), var(--fx-vignette-color, #000) 100%);
+  opacity: var(--fx-vignette-strength, 0.55);
+  z-index: 2;
+}
+
+/* ---------- Duotone (auf dem Wrapper) ----------
+   Unter dem Bild liegt die helle Farbe, das Bild in Graustufen multipliziert sich darauf (Weiß → hell,
+   Schwarz → Schwarz), darüber hebt die dunkle Farbe mit „lighten“ die Schatten an (Schwarz → dunkel). */
+[data-fx~='duotone'].wfx-host > :not(.wfx-l) {
+  filter: grayscale(1) contrast(var(--fx-duotone-contrast, 1.1));
+  mix-blend-mode: multiply;
+  transition: filter var(--fx-duotone-speed, 0.6s) ease;
+}
+.wfx-duo-light { background: var(--fx-duotone-light, #f2e8d5); z-index: -1; transition: opacity var(--fx-duotone-speed, 0.6s) ease; }
+.wfx-duo-dark { background: var(--fx-duotone-dark, #1d3cff); mix-blend-mode: lighten; transition: opacity var(--fx-duotone-speed, 0.6s) ease; }
+/* in Farbe beim Hover auf das Element oder auf einen Link darum */
+[data-fx-duotone-hover].wfx-host:hover > :not(.wfx-l),
+a:hover [data-fx-duotone-hover].wfx-host > :not(.wfx-l) { filter: none; }
+[data-fx-duotone-hover].wfx-host:hover > .wfx-duo-light,
+[data-fx-duotone-hover].wfx-host:hover > .wfx-duo-dark,
+a:hover [data-fx-duotone-hover].wfx-host > .wfx-duo-light,
+a:hover [data-fx-duotone-hover].wfx-host > .wfx-duo-dark { opacity: 0; }
+
+/* ---------- Mesh-Gradient (Hintergrund des Elements) ---------- */
+@property --fx-m1 { syntax: '<percentage>'; inherits: false; initial-value: 15%; }
+@property --fx-m2 { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --fx-m3 { syntax: '<percentage>'; inherits: false; initial-value: 85%; }
+@property --fx-m4 { syntax: '<percentage>'; inherits: false; initial-value: 15%; }
+@property --fx-m5 { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
+@property --fx-m6 { syntax: '<percentage>'; inherits: false; initial-value: 85%; }
+@property --fx-m7 { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --fx-m8 { syntax: '<percentage>'; inherits: false; initial-value: 80%; }
+html [data-fx~='mesh'] {
+  background-color: var(--fx-mesh-base, #e9e6df);
+  background-image:
+    radial-gradient(circle at var(--fx-m1) var(--fx-m2), var(--fx-c1, #ff5a1f) 0, transparent var(--fx-mesh-size, 55%)),
+    radial-gradient(circle at var(--fx-m3) var(--fx-m4), var(--fx-c2, #1d3cff) 0, transparent var(--fx-mesh-size, 55%)),
+    radial-gradient(circle at var(--fx-m5) var(--fx-m6), var(--fx-c3, transparent) 0, transparent var(--fx-mesh-size, 55%)),
+    radial-gradient(circle at var(--fx-m7) var(--fx-m8), var(--fx-c4, transparent) 0, transparent var(--fx-mesh-size, 55%)),
+    radial-gradient(circle at 50% 50%, var(--fx-c5, transparent) 0, transparent var(--fx-mesh-size, 55%));
+}
+html [data-fx~='mesh'][data-fx-mesh-animate] { animation: wfx-mesh var(--fx-mesh-speed, 18s) ease-in-out infinite alternate; }
+@keyframes wfx-mesh {
+  33% { --fx-m1: 35%; --fx-m2: 55%; --fx-m3: 60%; --fx-m4: 30%; --fx-m5: 85%; --fx-m6: 60%; --fx-m7: 10%; --fx-m8: 45%; }
+  66% { --fx-m1: 20%; --fx-m2: 80%; --fx-m3: 90%; --fx-m4: 60%; --fx-m5: 45%; --fx-m6: 15%; --fx-m7: 40%; --fx-m8: 90%; }
+  100% { --fx-m1: 60%; --fx-m2: 30%; --fx-m3: 30%; --fx-m4: 10%; --fx-m5: 75%; --fx-m6: 90%; --fx-m7: 15%; --fx-m8: 20%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fx-grain-animate] > .wfx-grain,
+  html [data-fx~='mesh'][data-fx-mesh-animate] { animation: none; }
+}
